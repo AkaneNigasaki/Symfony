@@ -15,17 +15,6 @@
     <div class="bg-dark-gray border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
         <form method="post" class="p-8 space-y-8">
             <div class="grid grid-cols-1 gap-8">
-                {# School Selection #}
-                <div class="group">
-                    <label for="school">École Assignée *</label>
-                    <select id="school" name="school" required>
-                        <option value="" class="bg-dark-gray text-slate-400">Sélectionner une école...</option>
-                        {% for school in schools %}
-                            <option value="{{ school.id }}" class="bg-dark-gray text-white">{{ school.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {# First Name #}
                     <div class="group">

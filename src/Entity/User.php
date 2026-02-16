@@ -3,8 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,50 +15,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[ORM\Column(type: Types::STRING, length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
     private ?string $email = null;
 
-    /**
-     * @var list<string>
-     */
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: Types::JSON)]
     private array $roles = ['ROLE_USER'];
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: Types::STRING)]
     private ?string $password = null;
 
     #[Assert\NotBlank(groups: ['registration'])]
     #[Assert\Length(min: 6, minMessage: 'Password must be at least {{ limit }} characters', groups: ['registration'])]
     private ?string $plainPassword = null;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 100)]
-    private ?string $name = null;
-
-    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 100, nullable: true)]
     #[Assert\Length(max: 100)]
     private ?string $firstName = null;
 
-    #[ORM\OneToMany(targetEntity: School::class, mappedBy: 'owner', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection $schools;
+    #[ORM\Column(type: Types::STRING, length: 100, nullable: true)]
+    #[Assert\Length(max: 100)]
+    private ?string $lastName = null;
 
-    #[ORM\OneToMany(targetEntity: UserActivity::class, mappedBy: 'user', orphanRemoval: true)]
-    private Collection $activities;
-
-    #[ORM\OneToMany(targetEntity: Student::class, mappedBy: 'user')]
-    private Collection $studentProfiles;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct()
     {
-        $this->schools = new ArrayCollection();
-        $this->activities = new ArrayCollection();
-        $this->studentProfiles = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -131,17 +118,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getFirstName(): ?string
     {
         return $this->firstName;
@@ -153,95 +129,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): static
+    {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    public function getFullName(): string
+    {
+        if ($this->firstName && $this->lastName) {
+            return $this->firstName . ' ' . $this->lastName;
+        }
+        return $this->firstName ?? $this->lastName ?? $this->email ?? 'User';
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
     public function eraseCredentials(): void
     {
         $this->plainPassword = null;
-    }
-
-    /**
-     * @return Collection<int, School>
-     */
-    public function getSchools(): Collection
-    {
-        return $this->schools;
-    }
-
-    public function addSchool(School $school): static
-    {
-        if (!$this->schools->contains($school)) {
-            $this->schools->add($school);
-            $school->setOwner($this);
-        }
-        return $this;
-    }
-
-    public function removeSchool(School $school): static
-    {
-        if ($this->schools->removeElement($school)) {
-            if ($school->getOwner() === $this) {
-                $school->setOwner(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, UserActivity>
-     */
-    public function getActivities(): Collection
-    {
-        return $this->activities;
-    }
-
-    public function addActivity(UserActivity $activity): static
-    {
-        if (!$this->activities->contains($activity)) {
-            $this->activities->add($activity);
-            $activity->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeActivity(UserActivity $activity): static
-    {
-        if ($this->activities->removeElement($activity)) {
-            // set the owning side to null (unless already changed)
-            if ($activity->getUser() === $this) {
-                $activity->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Student>
-     */
-    public function getStudentProfiles(): Collection
-    {
-        return $this->studentProfiles;
-    }
-
-    public function addStudentProfile(Student $student): static
-    {
-        if (!$this->studentProfiles->contains($student)) {
-            $this->studentProfiles->add($student);
-            $student->setUser($this);
-        }
-        return $this;
-    }
-
-    public function removeStudentProfile(Student $student): static
-    {
-        if ($this->studentProfiles->removeElement($student)) {
-            if ($student->getUser() === $this) {
-                $student->setUser(null);
-            }
-        }
-        return $this;
     }
 }

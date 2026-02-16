@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SchoolFlow - Système de Gestion{% endblock %}</title>
+    <title>{% block title %}EduManage - Gestion des Enseignants et Matières{% endblock %}</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -92,7 +92,7 @@
                     <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
                         <i data-lucide="graduation-cap" class="text-white w-6 h-6"></i>
                     </div>
-                    <span class="font-bold text-xl tracking-tight sidebar-text">SchoolFlow</span>
+                    <span class="font-bold text-xl tracking-tight sidebar-text">EduManage</span>
                 </div>
                 <button id="sidebar-toggle" class="p-2 absolute top-8 -right-4 z-50 rounded-lg bg-surface-dark border border-white/10 text-slate-400 hover:text-white hover:border-primary/50 transition-all shadow-xl backdrop-blur-md">
                     <i data-lucide="chevron-left" id="toggle-icon" class="w-4 h-4 transition-transform duration-300 font-bold"></i>
@@ -107,39 +107,14 @@
                     <span class="sidebar-text font-medium text-sm">Tableau de bord</span>
                 </a>
 
-                <a href="{{ path('school_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'school' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                    <i data-lucide="building" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="sidebar-text font-medium text-sm">Écoles</span>
-                </a>
-
-                <a href="{{ path('classroom_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'classroom' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                    <i data-lucide="door-open" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="sidebar-text font-medium text-sm">Classes</span>
-                </a>
-
                 <a href="{{ path('teacher_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'teacher' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
                     <i data-lucide="contact" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="sidebar-text font-medium text-sm">Enseignants</span>
                 </a>
 
-                <a href="{{ path('course_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'course' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                    <i data-lucide="book-open" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="sidebar-text font-medium text-sm">Cours</span>
-                </a>
-
-                <a href="{{ path('student_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'student' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                    <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="sidebar-text font-medium text-sm">Étudiants</span>
-                </a>
-
-                <a href="{{ path('schedule_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'schedule' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                    <i data-lucide="calendar" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="sidebar-text font-medium text-sm">Emplois du temps</span>
-                </a>
-
-                <a href="{{ path('activity_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'activity' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
-                    <i data-lucide="activity" class="w-5 h-5 flex-shrink-0"></i>
-                    <span class="sidebar-text font-medium text-sm">Activités récentes</span>
+                <a href="{{ path('subject_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'subject' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                    <i data-lucide="book" class="w-5 h-5 flex-shrink-0"></i>
+                    <span class="sidebar-text font-medium text-sm">Matières</span>
                 </a>
             </nav>
 
@@ -247,7 +222,7 @@
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors"></i>
                     <input
                         type="text"
-                        placeholder="Rechercher des établissements, cours..."
+                        placeholder="Rechercher des enseignants, matières..."
                         class="w-full bg-white/5 border border-white/5 rounded-2xl pl-12 pr-4 py-3 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:bg-white/[0.07] transition-all"
                     />
                 </div>

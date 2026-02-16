@@ -20,31 +20,31 @@ class Teacher
     private ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 100)]
-    #[Assert\NotBlank(message: 'First name is required')]
-    #[Assert\Length(max: 100, maxMessage: 'First name cannot exceed {{ limit }} characters')]
+    #[Assert\NotBlank(message: 'Le prénom est requis')]
+    #[Assert\Length(max: 100, maxMessage: 'Le prénom ne peut pas dépasser {{ limit }} caractères')]
     private ?string $firstName = null;
 
     #[ORM\Column(type: Types::STRING, length: 100)]
-    #[Assert\NotBlank(message: 'Last name is required')]
-    #[Assert\Length(max: 100, maxMessage: 'Last name cannot exceed {{ limit }} characters')]
+    #[Assert\NotBlank(message: 'Le nom est requis')]
+    #[Assert\Length(max: 100, maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères')]
     private ?string $lastName = null;
 
     #[ORM\Column(type: Types::STRING, length: 191, unique: true)]
-    #[Assert\NotBlank(message: 'Email is required')]
-    #[Assert\Email(message: 'Please provide a valid email address')]
-    #[Assert\Length(max: 191, maxMessage: 'Email cannot exceed {{ limit }} characters')]
+    #[Assert\NotBlank(message: 'L\'email est requis')]
+    #[Assert\Email(message: 'Veuillez fournir une adresse email valide')]
+    #[Assert\Length(max: 191, maxMessage: 'L\'email ne peut pas dépasser {{ limit }} caractères')]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::STRING, length: 20, nullable: true)]
-    #[Assert\Length(max: 20, maxMessage: 'Phone number cannot exceed {{ limit }} characters')]
+    #[Assert\Length(max: 20, maxMessage: 'Le numéro de téléphone ne peut pas dépasser {{ limit }} caractères')]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    #[Assert\Length(max: 255, maxMessage: 'Specialization cannot exceed {{ limit }} characters')]
+    #[Assert\Length(max: 255, maxMessage: 'La spécialisation ne peut pas dépasser {{ limit }} caractères')]
     private ?string $specialization = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    #[Assert\NotBlank(message: 'Hire date is required')]
+    #[Assert\NotBlank(message: 'La date d\'embauche est requise')]
     private ?\DateTimeImmutable $hireDate = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
@@ -53,21 +53,12 @@ class Teacher
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(targetEntity: School::class, inversedBy: 'teachers')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull(message: 'School is required')]
-    private ?School $school = null;
-
-    #[ORM\OneToMany(targetEntity: Course::class, mappedBy: 'teacher')]
-    private Collection $courses;
-
-    #[ORM\OneToMany(targetEntity: Grade::class, mappedBy: 'gradedBy')]
-    private Collection $gradedAssignments;
+    #[ORM\OneToMany(targetEntity: Subject::class, mappedBy: 'teacher')]
+    private Collection $subjects;
 
     public function __construct()
     {
-        $this->courses = new ArrayCollection();
-        $this->gradedAssignments = new ArrayCollection();
+        $this->subjects = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
     }
@@ -176,62 +167,27 @@ class Teacher
         return $this;
     }
 
-    public function getCourses(): Collection
+    public function getSubjects(): Collection
     {
-        return $this->courses;
+        return $this->subjects;
     }
 
-    public function addCourse(Course $course): static
+    public function addSubject(Subject $subject): static
     {
-        if (!$this->courses->contains($course)) {
-            $this->courses->add($course);
-            $course->setTeacher($this);
+        if (!$this->subjects->contains($subject)) {
+            $this->subjects->add($subject);
+            $subject->setTeacher($this);
         }
         return $this;
     }
 
-    public function removeCourse(Course $course): static
+    public function removeSubject(Subject $subject): static
     {
-        if ($this->courses->removeElement($course)) {
-            if ($course->getTeacher() === $this) {
-                $course->setTeacher(null);
+        if ($this->subjects->removeElement($subject)) {
+            if ($subject->getTeacher() === $this) {
+                $subject->setTeacher(null);
             }
         }
-        return $this;
-    }
-
-    public function getGradedAssignments(): Collection
-    {
-        return $this->gradedAssignments;
-    }
-
-    public function addGradedAssignment(Grade $grade): static
-    {
-        if (!$this->gradedAssignments->contains($grade)) {
-            $this->gradedAssignments->add($grade);
-            $grade->setGradedBy($this);
-        }
-        return $this;
-    }
-
-    public function removeGradedAssignment(Grade $grade): static
-    {
-        if ($this->gradedAssignments->removeElement($grade)) {
-            if ($grade->getGradedBy() === $this) {
-                $grade->setGradedBy(null);
-            }
-        }
-        return $this;
-    }
-
-    public function getSchool(): ?School
-    {
-        return $this->school;
-    }
-
-    public function setSchool(?School $school): static
-    {
-        $this->school = $school;
         return $this;
     }
 }

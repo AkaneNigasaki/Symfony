@@ -1,9 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
     body {
-        @apply bg-[#0a0a0c] text-slate-200 antialiased font-sans;
+        @apply bg-white dark:bg-background-dark text-gray-900 dark:text-white font-sans antialiased;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"],
+    input[type="tel"],
+    select,
+    textarea {
+        @apply block w-full px-4 py-3 bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-gray-300 dark:border-white/10 rounded-xl;
+        @apply focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none backdrop-blur-md;
+        @apply hover:bg-gray-200 dark:hover:bg-white/10;
+    }
+    
+    select {
+        @apply appearance-none cursor-pointer;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 1rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+    
+    [color-scheme=dark] {
+        color-scheme: dark;
+    }
+    
+    label {
+        @apply block text-[11px] font-bold text-gray-600 dark:text-slate-500 uppercase tracking-[0.2em] mb-2 transition-colors;
+    }
+    
+    .group:focus-within label {
+        @apply text-primary;
+    }
+    
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        @apply invert opacity-50 hover:opacity-100 cursor-pointer transition-opacity;
+    }
+}
+
+@layer utilities {
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(124, 58, 237, 0.2);
+        border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(124, 58, 237, 0.4);
     }
 }

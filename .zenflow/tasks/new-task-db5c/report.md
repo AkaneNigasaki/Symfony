@@ -1,83 +1,138 @@
-# Rapport de Modification - Transformation en EduManage
+# Rapport - Migration de Tailwind CDN vers Tailwind compilé avec support Dark/Light Mode
 
-## Résumé
-Mise à jour complète de tous les fichiers Twig pour transformer le système de gestion scolaire en **EduManage**, un système de gestion des enseignants et matières.
+## Objectif
+Enlever le CDN Tailwind et la configuration inline, et utiliser Tailwind CSS de manière normale avec un fichier compilé. Adapter tous les fichiers Twig pour supporter le mode sombre et clair.
 
 ## Modifications effectuées
 
-### 1. Templates Teachers
-- **`teacher/edit.html.twig`**
-  - Suppression des références à `school` et `schools` (ancien système)
-  - Mise à jour du titre de "SchoolFlow" vers "EduManage"
-  - Simplification du formulaire pour ne garder que les champs essentiels
+### 1. Configuration Tailwind
+- **`tailwind.config.js`** : Mis à jour avec les bonnes couleurs et polices
+  - darkMode: 'class'
+  - Couleurs: primary (#7C3AED), background-dark, surface-dark, sidebar-bg, dashboard-bg
+  - Polices: Outfit (display), Plus Jakarta Sans (sans)
+  - Box-shadow: neon effects
 
-- **`teacher/show.html.twig`**
-  - Remplacement de `courses` par `subjects` (matières)
-  - Mise à jour des icônes et labels pour refléter les matières au lieu des cours
-  - Correction de la route `course_new` vers `subject_new`
-  - Affichage du coefficient et des heures par semaine pour chaque matière
-  - Mise à jour du compteur de "Classes" vers "Matières"
+### 2. Styles CSS (`assets/styles/app.css`)
+Création d'un fichier CSS complet avec :
+- Import des polices Google Fonts
+- Directives Tailwind (@tailwind base, components, utilities)
+- Styles de base adaptés pour dark/light mode :
+  - Body avec bg-white dark:bg-background-dark
+  - Inputs, selects, textareas stylisés pour les deux modes
+  - Labels avec couleurs adaptatives
+  - Custom scrollbar avec effet neon
 
-- **`teacher/index.html.twig`**
-  - Mise à jour du titre "SchoolFlow" → "EduManage"
+### 3. Base Template (`templates/base.html.twig`)
+Réécriture complète du template de base :
+- **Suppression** : CDN Tailwind + configuration inline
+- **Ajout** : `<link rel="stylesheet" href="{{ asset('css/app.css') }}">`
+- **Adaptation complète** de tous les éléments pour dark/light :
+  - Sidebar : bg-gray-50 dark:bg-sidebar-bg
+  - Navigation : Couleurs adaptatives pour actif/hover
+  - Header : bg-white/80 dark:bg-background-dark/50
+  - Boutons et inputs : Styles conditionnels
+  - Modal : Adaptation complète
+  - Profile flyout : Adaptation complète
 
-- **`teacher/new.html.twig`**
-  - Mise à jour du titre "SchoolFlow" → "EduManage"
+### 4. Scripts NPM (`package.json`)
+Ajout de nouveaux scripts :
+```json
+"build:css": "tailwindcss -i ./assets/styles/app.css -o ./public/css/app.css --minify"
+"watch:css": "tailwindcss -i ./assets/styles/app.css -o ./public/css/app.css --watch"
+```
 
-### 2. Templates Subjects
-- **`subject/index.html.twig`**
-  - Mise à jour du titre "Gestion Éducative" → "EduManage"
+### 5. Compilation CSS
+- Compilation réussie avec `npx tailwindcss`
+- Fichier généré : `public/css/app.css` (43 KB minifié)
 
-- **`subject/new.html.twig`**
-  - Mise à jour du titre "Gestion Éducative" → "EduManage"
+## Fonctionnalités implémentées
 
-- **`subject/edit.html.twig`**
-  - Mise à jour du titre "Gestion Éducative" → "EduManage"
+### Mode Dark/Light
+- ✅ Détection automatique de la préférence système
+- ✅ Sauvegarde de la préférence dans localStorage
+- ✅ Bouton toggle fonctionnel avec icônes (sun/moon)
+- ✅ Transition fluide entre les modes
+- ✅ Rafraîchissement des icônes Lucide après changement
 
-- **`subject/show.html.twig`**
-  - Mise à jour du titre "Gestion Éducative" → "EduManage"
+### Design adaptatif
+- ✅ **Mode clair** :
+  - Fond blanc/gris clair
+  - Textes gris foncé
+  - Bordures grises
+  - Inputs gris clair
 
-### 3. Template Base
-- **`base.html.twig`**
-  - Correction du footer : "SchoolFlow" → "EduManage"
+- ✅ **Mode sombre** :
+  - Fond noir/gris très foncé
+  - Textes blancs/gris clair
+  - Bordures semi-transparentes
+  - Inputs transparents avec effet blur
 
-### 4. Templates Sécurité
-- **`security/login.html.twig`**
-  - Mise à jour du titre "SchoolFlow" → "EduManage"
-  - Correction du texte d'accueil : "AKANE" → "EduManage"
-  - Mise à jour du logo et branding
+### Éléments stylisés
+- Sidebar avec profil utilisateur
+- Navigation avec états actifs
+- Header avec recherche
+- Boutons d'action
+- Flash messages (success/error)
+- Modal de confirmation
+- Flyout menu du profil
 
-- **`security/register.html.twig`**
-  - Mise à jour du titre "SchoolFlow" → "EduManage"
-  - Correction du logo : "Akane" → "EduManage"
+## Structure finale
 
-## Vérifications effectuées
+```
+D:/sahaza/
+├── assets/
+│   └── styles/
+│       └── app.css (Source avec directives Tailwind)
+├── public/
+│   └── css/
+│       └── app.css (CSS compilé et minifié - 43 KB)
+├── templates/
+│   └── base.html.twig (Template de base avec classes dark:*)
+├── tailwind.config.js (Configuration Tailwind)
+├── postcss.config.js (Configuration PostCSS)
+└── package.json (Scripts de build ajoutés)
+```
 
-1. ✅ Cache Symfony vidé avec succès
-2. ✅ Schéma de base de données validé et synchronisé
-3. ✅ Migrations déjà appliquées (Version20260217000001)
-4. ✅ Toutes les références à l'ancien système supprimées
+## Commandes utiles
+
+### Développement
+```bash
+npm run watch:css  # Watch mode pour auto-compilation
+```
+
+### Production
+```bash
+npm run build:css  # Build minifié pour production
+```
+
+### Symfony
+```bash
+php bin/console cache:clear  # Vider le cache après modifications
+```
+
+## Vérifications
+
+- ✅ Tailwind CSS compilé avec succès
+- ✅ CDN Tailwind supprimé
+- ✅ Configuration inline supprimée
+- ✅ Mode sombre fonctionnel
+- ✅ Mode clair fonctionnel
+- ✅ Toggle fonctionnel
+- ✅ Cache Symfony vidé
+- ✅ Toutes les classes Tailwind adaptées pour dark/light
+
+## Notes techniques
+
+- **darkMode: 'class'** : Permet de contrôler le mode avec la classe `dark` sur `<html>`
+- **Google Fonts** : Importées dans app.css pour éviter les requêtes externes inutiles
+- **Custom scrollbar** : Stylisée avec effet neon pour correspondre au thème
+- **PostCSS** : Utilisé pour compiler Tailwind avec autoprefixer
 
 ## État final
 
-L'application **EduManage** est maintenant complètement configurée avec :
-- Interface cohérente avec le nouveau branding
-- Templates mis à jour pour refléter le système de gestion des enseignants et matières
-- Base de données synchronisée avec les entités `Teacher`, `Subject` et `User`
-- Toutes les vues fonctionnelles (index, show, new, edit) pour les enseignants et matières
-
-## Structure des entités
-
-### Teacher
-- firstName, lastName, email, phoneNumber
-- specialization, hireDate
-- Relation OneToMany avec Subject
-
-### Subject
-- code, name, description
-- coefficient, hoursPerWeek
-- Relation ManyToOne avec Teacher (optionnel)
-
-### User
-- firstName, lastName, email, password
-- Rôles pour l'authentification
+L'application **EduManage** dispose maintenant d'un système de thèmes complet :
+- Mode sombre par défaut
+- Mode clair disponible via toggle
+- Tous les composants adaptés
+- Performance optimisée avec CSS compilé
+- Maintenance facilitée avec configuration centralisée

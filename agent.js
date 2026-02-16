@@ -15,7 +15,7 @@ const rl = readline.createInterface({
 
 async function runAgent() {
     const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
+        model: "gemini-3-flash-preview",
         systemInstruction: `Tu es un expert Symfony et DevOps. Ton but est d'aider à créer ou modifier des projets Symfony.
         
         Règles strictes :
@@ -70,15 +70,7 @@ async function runAgent() {
                 }
             }
         } catch (e) {
-            if (e.message.includes("429")) {
-                console.log(
-                    "Limite de débit atteinte. Pause de 60 secondes nécessaire...",
-                );
-                await new Promise((resolve) => setTimeout(resolve, 60000));
-                console.log("Vous pouvez maintenant réessayer.");
-            } else {
-                console.error("Erreur : " + e.message);
-            }
+            console.error("Erreur : " + e.message);
         }
     }
     process.exit(0);

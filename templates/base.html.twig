@@ -36,7 +36,6 @@
             }
         </script>
         <script>
-            // Check for saved theme preference or default to dark mode
             if (localStorage.theme === 'light' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: light)').matches)) {
                 document.documentElement.classList.remove('dark')
             } else {
@@ -46,7 +45,7 @@
         <style type="text/tailwindcss">
             @layer base {
                 body {
-                    @apply bg-background-dark text-white font-sans antialiased;
+                    @apply bg-white dark:bg-background-dark text-gray-900 dark:text-white font-sans antialiased;
                 }
                 input[type="text"],
                 input[type="email"],
@@ -55,7 +54,7 @@
                 input[type="tel"],
                 select,
                 textarea {
-                    @apply block w-full px-4 py-3 bg-white/5 text-white placeholder-slate-500 border border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none backdrop-blur-md hover:bg-white/10;
+                    @apply block w-full px-4 py-3 bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border border-gray-300 dark:border-white/10 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none backdrop-blur-md hover:bg-gray-200 dark:hover:bg-white/10;
                 }
                 select {
                     @apply appearance-none cursor-pointer;
@@ -69,7 +68,7 @@
                     color-scheme: dark;
                 }
                 label {
-                    @apply block text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-2 transition-colors;
+                    @apply block text-[11px] font-bold text-gray-600 dark:text-slate-500 uppercase tracking-[0.2em] mb-2 transition-colors;
                 }
                 .group:focus-within label {
                     @apply text-primary;
@@ -82,11 +81,11 @@
         </style>
     {% block stylesheets %}{% endblock %}
 </head>
-<body class="h-full bg-background-dark text-slate-200 antialiased font-sans overflow-hidden">
+<body class="h-full bg-white dark:bg-background-dark text-gray-900 dark:text-slate-200 antialiased font-sans overflow-hidden">
     <div class="flex h-screen overflow-hidden">
         {% if app.user %}
         {# Sidebar #}
-        <aside id="sidebar" class="w-64 bg-sidebar-bg flex flex-col border-r border-white/5 transition-all duration-300 ease-in-out relative z-50">
+        <aside id="sidebar" class="w-64 bg-gray-50 dark:bg-sidebar-bg flex flex-col border-r border-gray-200 dark:border-white/5 transition-all duration-300 ease-in-out relative z-50">
             <div class="p-8 flex items-center justify-between relative whitespace-nowrap">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
@@ -94,7 +93,7 @@
                     </div>
                     <span class="font-bold text-xl tracking-tight sidebar-text">EduManage</span>
                 </div>
-                <button id="sidebar-toggle" class="p-2 absolute top-8 -right-4 z-50 rounded-lg bg-surface-dark border border-white/10 text-slate-400 hover:text-white hover:border-primary/50 transition-all shadow-xl backdrop-blur-md">
+                <button id="sidebar-toggle" class="p-2 absolute top-8 -right-4 z-50 rounded-lg bg-white dark:bg-surface-dark border border-gray-300 dark:border-white/10 text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white hover:border-primary/50 transition-all shadow-xl backdrop-blur-md">
                     <i data-lucide="chevron-left" id="toggle-icon" class="w-4 h-4 transition-transform duration-300 font-bold"></i>
                 </button>
             </div>
@@ -102,17 +101,17 @@
             <nav class="flex-1 px-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar">
                 {% set current_route = app.request.attributes.get('_route') %}
 
-                <a href="{{ path('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route == 'home' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                <a href="{{ path('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route == 'home' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-slate-200' }}">
                     <i data-lucide="layout-dashboard" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="sidebar-text font-medium text-sm">Tableau de bord</span>
                 </a>
 
-                <a href="{{ path('teacher_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'teacher' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                <a href="{{ path('teacher_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'teacher' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-slate-200' }}">
                     <i data-lucide="contact" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="sidebar-text font-medium text-sm">Enseignants</span>
                 </a>
 
-                <a href="{{ path('subject_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'subject' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200' }}">
+                <a href="{{ path('subject_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'subject' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-slate-200' }}">
                     <i data-lucide="book" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="sidebar-text font-medium text-sm">Matières</span>
                 </a>
@@ -214,26 +213,26 @@
         {% endif %}
 
         {# Main Container #}
-        <div class="flex-1 flex flex-col min-w-0 bg-dashboard-bg relative overflow-hidden">
+        <div class="flex-1 flex flex-col min-w-0 bg-gray-100 dark:bg-dashboard-bg relative overflow-hidden">
             {% if app.user %}
             {# Top Header #}
-            <header class="h-20 flex items-center justify-between px-8 gap-6 border-b border-white/5 bg-background-dark/50 backdrop-blur-xl">
+            <header class="h-20 flex items-center justify-between px-8 gap-6 border-b border-gray-200 dark:border-white/5 bg-white/80 dark:bg-background-dark/50 backdrop-blur-xl">
                 <div class="flex-1 max-w-2xl relative group">
-                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors"></i>
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-500 group-focus-within:text-primary transition-colors"></i>
                     <input
                         type="text"
                         placeholder="Rechercher des enseignants, matières..."
-                        class="w-full bg-white/5 border border-white/5 rounded-2xl pl-12 pr-4 py-3 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:bg-white/[0.07] transition-all"
+                        class="w-full bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/5 rounded-2xl pl-12 pr-4 py-3 text-sm text-gray-900 dark:text-slate-200 placeholder:text-gray-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:bg-gray-200 dark:focus:bg-white/[0.07] transition-all"
                     />
                 </div>
 
                 <div class="flex items-center gap-4">
                     {# Dark Mode Toggle #}
-                    <button id="theme-toggle" class="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-all relative" title="Basculer le thème">
+                    <button id="theme-toggle" class="w-10 h-10 rounded-xl border border-gray-300 dark:border-white/10 flex items-center justify-center text-gray-600 dark:text-slate-500 hover:text-gray-900 dark:hover:text-slate-200 hover:bg-gray-200 dark:hover:bg-white/5 transition-all relative" title="Basculer le thème">
                         <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
                         <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
                     </button>
-                    <button class="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-all relative">
+                    <button class="w-10 h-10 rounded-xl border border-gray-300 dark:border-white/10 flex items-center justify-center text-gray-600 dark:text-slate-500 hover:text-gray-900 dark:hover:text-slate-200 hover:bg-gray-200 dark:hover:bg-white/5 transition-all relative">
                         <i data-lucide="bell" class="w-5 h-5"></i>
                         <div class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 border-2 border-dashboard-bg rounded-full"></div>
                     </button>
@@ -359,16 +358,21 @@
         
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark');
+                const htmlElement = document.documentElement;
+                const isDark = htmlElement.classList.contains('dark');
                 
-                if (document.documentElement.classList.contains('dark')) {
-                    localStorage.theme = 'dark';
+                if (isDark) {
+                    htmlElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
                 } else {
-                    localStorage.theme = 'light';
+                    htmlElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
                 }
                 
                 // Refresh icons after theme change
-                setTimeout(() => lucide.createIcons(), 50);
+                setTimeout(() => {
+                    lucide.createIcons();
+                }, 10);
             });
         }
 

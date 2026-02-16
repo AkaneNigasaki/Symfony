@@ -124,10 +124,10 @@
                     {# Trigger Button #}
                     <button class="flex w-full items-center gap-3 rounded-2xl border border-white/5 bg-surface-dark p-3 text-left transition-all hover:bg-white/5 hover:border-white/10 group">
                         <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary ring-2 ring-white/10 font-bold text-sm">
-                            {{ (app.user.firstName ?? app.user.name ?? 'U')|first|upper }}
+                            {{ (app.user.firstName ?? 'U')|first|upper }}
                         </div>
                         <div class="flex flex-1 flex-col overflow-hidden">
-                            <p class="truncate text-sm font-semibold text-white">{{ app.user.firstName|default(app.user.name)|default(app.user.userIdentifier) }}</p>
+                            <p class="truncate text-sm font-semibold text-white">{{ app.user.fullName }}</p>
                             <p class="truncate text-xs text-white/50">Administrateur</p>
                         </div>
                         <i data-lucide="chevron-right" class="text-white/40 transition-all group-hover:translate-x-1 group-hover:text-white w-4 h-4"></i>
@@ -143,7 +143,7 @@
                                 <div class="absolute bottom-0 left-0 h-full w-full flex items-end justify-center px-6 translate-y-1/2">
                                     <div class="relative">
                                         <div class="h-20 w-20 rounded-full border-4 border-[#251b2e] bg-primary/20 flex items-center justify-center text-primary font-bold text-2xl shadow-xl">
-                                            {{ (app.user.firstName ?? app.user.name ?? 'U')|first|upper }}
+                                            {{ (app.user.firstName ?? 'U')|first|upper }}
                                         </div>
                                         <div class="absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-[#251b2e] bg-green-500"></div>
                                     </div>
@@ -151,8 +151,8 @@
                             </div>
 
                             <div class="mt-12 flex flex-col items-center px-6 pb-6 text-center">
-                                <h2 class="text-xl font-bold text-white">{{ app.user.firstName|default(app.user.name)|default(app.user.userIdentifier) }}</h2>
-                                <p class="mt-1 text-sm text-white/50">{{ app.user.email ?? 'admin@schoolflow.io' }}</p>
+                                <h2 class="text-xl font-bold text-white">{{ app.user.fullName }}</h2>
+                                <p class="mt-1 text-sm text-white/50">{{ app.user.email ?? 'admin@edumanage.fr' }}</p>
                                 <span class="mt-3 inline-flex items-center rounded-full bg-primary/20 px-3 py-1 text-xs font-semibold text-primary ring-1 ring-primary/30">
                                     Administrateur
                                 </span>

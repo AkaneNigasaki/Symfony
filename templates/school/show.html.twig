@@ -1,0 +1,342 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ school.name }} - SchoolFlow{% endblock %}
+
+{% block body %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 pb-8 border-b border-white/5">
+    <div>
+        <h1 class="text-4xl font-bold text-white tracking-tight flex items-center space-x-4">
+            <i data-lucide="building" class="w-10 h-10 text-primary"></i>
+            <span>{{ school.name }}</span>
+        </h1>
+        <p class="mt-2 text-slate-400">Aperçu détaillé et statistiques de cet établissement.</p>
+    </div>
+    {% if school.owner == app.user %}
+    <div class="mt-6 flex space-x-3 sm:mt-0">
+        <a href="{{ path('membership_requests', {id: school.id}) }}" class="inline-flex items-center px-4 py-2 bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500 hover:text-white rounded-xl text-sm font-bold transition-all relative">
+            <i data-lucide="user-plus" class="w-5 h-5 mr-2"></i>
+            Demandes
+        </a>
+        <a href="{{ path('school_edit', {id: school.id}) }}" class="inline-flex items-center px-4 py-2 bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white rounded-xl text-sm font-bold transition-all">
+            <i data-lucide="edit" class="w-5 h-5 mr-2"></i>
+            Modifier
+        </a>
+        <button type="button" 
+            onclick="showConfirmModal('Supprimer cette école et toutes les données associées ?', () => { 
+                document.getElementById('delete-form-school-{{ school.id }}').submit(); 
+            })" 
+            class="inline-flex items-center px-4 py-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl text-sm font-bold transition-all">
+            <i data-lucide="trash-2" class="w-5 h-5 mr-2"></i>
+            Supprimer
+        </button>
+        <form id="delete-form-school-{{ school.id }}" method="post" action="{{ path('school_delete', {id: school.id}) }}" class="hidden">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ school.id) }}">
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+    {# Details Card #}
+    <div class="lg:col-span-2 bg-dark-gray border border-white/5 rounded-2xl overflow-hidden">
+        <div class="px-6 py-4 border-b border-white/5 bg-white/2 flex items-center space-x-2">
+            <i data-lucide="info" class="w-5 h-5 text-primary"></i>
+            <h5 class="text-sm font-bold uppercase tracking-widest text-white">Informations Générales</h5>
+        </div>
+        <div class="p-8 space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {% if school.address %}
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Adresse</dt>
+                    <dd class="text-slate-200 text-lg">{{ school.address }}</dd>
+                </div>
+                {% endif %}
+                {% if school.phone %}
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Téléphone</dt>
+                    <dd class="text-slate-200 text-lg">{{ school.phone }}</dd>
+                </div>
+                {% endif %}
+                {% if school.email %}
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Email</dt>
+                    <dd class="text-slate-200 text-lg underline decoration-primary/30">{{ school.email }}</dd>
+                </div>
+                {% endif %}
+            </div>
+            {% if school.description %}
+            <div class="pt-8 border-t border-white/5">
+                <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Description</dt>
+                <dd class="text-slate-400 leading-relaxed">{{ school.description }}</dd>
+            </div>
+            {% endif %}
+
+            {# Join Link Section #}
+{% if school.owner == app.user %}
+<div class="pt-8 border-t border-white/5">
+    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">
+        Lien d'Adhésion
+    </dt>
+
+    <div class="flex items-center space-x-4">
+        <div id="join-link-container"
+             class="flex-1 bg-white/5 p-4 rounded-xl border border-white/10 font-mono text-xs truncate overflow-hidden">
+
+            {% if school.joinToken %}
+                {% set joinUrl = url('membership_join', { token: school.joinToken }) %}
+                <span id="join-link-text" class="text-primary">
+                    {{ joinUrl }}
+                </span>
+            {% else %}
+                <span class="text-slate-400">
+                    Aucun lien généré
+                </span>
+            {% endif %}
+
+        </div>
+
+        <div class="flex space-x-2">
+            {% if school.joinToken %}
+                <button
+                    onclick="copyToClipboard('{{ joinUrl }}', this)"
+                    class="p-4 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl transition-all flex items-center justify-center"
+                    title="Copier le lien"
+                >
+                    <i data-lucide="copy" class="w-5 h-5"></i>
+                </button>
+
+                <form method="post" action="{{ path('school_reset_token', { id: school.id }) }}">
+                    <button
+                        type="submit"
+                        class="p-4 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-all"
+                        title="Désactiver le lien"
+                    >
+                        <i data-lucide="link-2" class="w-5 h-5"></i>
+                    </button>
+                </form>
+            {% else %}
+                <form method="post" action="{{ path('school_generate_token', { id: school.id }) }}">
+                    <button
+                        type="submit"
+                        class="p-4 bg-green-500/10 text-green-500 hover:bg-green-500 hover:text-white rounded-xl transition-all flex items-center justify-center"
+                        title="Générer le lien"
+                    >
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if not school.joinToken %}
+        <p class="mt-2 text-xs text-slate-500 italic">
+            Cliquez sur le bouton + pour générer un lien d'invitation unique.
+        </p>
+    {% else %}
+        <p class="mt-2 text-xs text-slate-500 italic">
+            Partagez ce lien pour permettre à de nouveaux membres de rejoindre votre établissement.
+        </p>
+    {% endif %}
+
+    <script>
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = btn.querySelector('i');
+                icon.setAttribute('data-lucide', 'check');
+                lucide.createIcons();
+                btn.classList.add('bg-emerald-500', 'text-white');
+                btn.classList.remove('bg-primary/10', 'text-primary');
+
+                setTimeout(() => {
+                    icon.setAttribute('data-lucide', 'copy');
+                    lucide.createIcons();
+                    btn.classList.remove('bg-emerald-500', 'text-white');
+                    btn.classList.add('bg-primary/10', 'text-primary');
+                }, 2000);
+            });
+        }
+    </script>
+</div>
+{% endif %}
+
+        </div>
+    </div>
+
+    {# Stats Grid #}
+    <div class="space-y-6">
+        <div class="bg-dark-gray border border-white/5 rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h5 class="text-sm font-bold uppercase tracking-widest text-white">Stats Rapides</h5>
+                <i data-lucide="bar-chart-3" class="w-5 h-5 text-slate-700"></i>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white/2 p-4 rounded-xl border border-white/5 text-center group hover:border-primary/50 transition-all">
+                    <div class="text-2xl font-bold text-white mb-1">{{ school.classrooms|length }}</div>
+                    <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Salles</div>
+                </div>
+                <div class="bg-white/2 p-4 rounded-xl border border-white/5 text-center group hover:border-sky-500/50 transition-all">
+                    <div class="text-2xl font-bold text-white mb-1">{{ school.teachers|length }}</div>
+                    <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Profs</div>
+                </div>
+                <div class="bg-white/2 p-4 rounded-xl border border-white/5 text-center group hover:border-amber-500/50 transition-all">
+                    <div class="text-2xl font-bold text-white mb-1">{{ school.courses|length }}</div>
+                    <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Courses</div>
+                </div>
+                <div class="bg-white/2 p-4 rounded-xl border border-white/5 text-center group hover:border-rose-500/50 transition-all">
+                    <div class="text-2xl font-bold text-white mb-1">{{ school.students|length }}</div>
+                    <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Élèves</div>
+                </div>
+            </div>
+        </div>
+
+        {# Quick Links / Advanced #}
+        {% if school.owner == app.user %}
+        <div class="bg-dark-gray border border-white/5 rounded-2xl overflow-hidden">
+            <div class="px-6 py-4 border-b border-white/5 bg-white/2">
+                <h5 class="text-sm font-bold uppercase tracking-widest text-white">Avancé</h5>
+            </div>
+            <div class="divide-y divide-white/5">
+                <a href="{{ path('classroom_index') }}?school={{ school.id }}" class="flex items-center justify-between px-6 py-4 hover:bg-white/5 transition-colors group">
+                    <span class="text-sm text-slate-400 group-hover:text-white transition-colors">Gérer les Classes</span>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-slate-700 group-hover:text-primary transition-colors"></i>
+                </a>
+                <a href="{{ path('student_index') }}?school={{ school.id }}" class="flex items-center justify-between px-6 py-4 hover:bg-white/5 transition-colors group">
+                    <span class="text-sm text-slate-400 group-hover:text-white transition-colors">Gérer les Étudiants</span>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-slate-700 group-hover:text-primary transition-colors"></i>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{# Classrooms List Table #}
+<div class="bg-dark-gray border border-white/5 rounded-2xl overflow-hidden">
+    <div class="px-6 py-4 border-b border-white/5 bg-white/2 flex items-center justify-between">
+        <h5 class="text-sm font-bold uppercase tracking-widest text-white flex items-center">
+            <i data-lucide="door-open" class="w-5 h-5 text-primary mr-2"></i>
+            Classes dans cette école
+        </h5>
+    </div>
+    <div class="p-0">
+        {% if school.classrooms|length > 0 %}
+            <ul class="divide-y divide-white/5">
+                {% for room in school.classrooms %}
+                    <li class="px-6 py-4 flex items-center justify-between group hover:bg-white/2 transition-colors">
+                        <div class="flex items-center space-x-3">
+                            <i data-lucide="location-marker" class="w-5 h-5 text-slate-700 group-hover:text-primary transition-colors"></i>
+                            <a href="{{ path('classroom_show', {id: room.id}) }}" class="font-bold text-white hover:text-primary transition-colors">{{ room.name }}</a>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20 mr-2">
+                                {{ room.type }}
+                            </span>
+                            <span class="text-xs text-slate-500">{{ room.capacity }} places</span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="p-8 text-center text-slate-600">
+                <p>Aucune classe pour le moment.</p>
+                {% if school.owner == app.user %}
+                    <a href="{{ path('classroom_new') }}" class="text-primary hover:text-white text-xs font-bold mt-2 inline-block">Ajouter une classe</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{# Members Section #}
+<div class="mt-8 bg-dark-gray border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+    <div class="px-6 py-4 border-b border-white/5 bg-white/2 flex items-center justify-between">
+        <h5 class="text-sm font-bold uppercase tracking-widest text-white flex items-center">
+            <i data-lucide="users" class="w-5 h-5 text-primary mr-2"></i>
+            Membres de l'établissement
+        </h5>
+    </div>
+    <div class="p-0">
+        <ul class="divide-y divide-white/5">
+            {# 1. Owner (Admin/Director) #}
+            <li class="px-6 py-4 flex items-center justify-between group hover:bg-white/2 transition-colors">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30">
+                        <i data-lucide="shield" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-white font-bold flex items-center">
+                            {{ school.owner.firstName|default('') }} {{ school.owner.name|default(school.owner.userIdentifier) }}
+                            <span class="ml-2 px-2 py-0.5 rounded text-[8px] uppercase font-black bg-primary text-white tracking-tighter">Propriétaire</span>
+                        </div>
+                        <div class="text-[10px] text-slate-500 uppercase tracking-tight">Administrateur Principal</div>
+                    </div>
+                </div>
+                <div class="text-xs text-slate-500 font-mono">{{ school.owner.email }}</div>
+            </li>
+
+            {# 2. Teachers #}
+            {% for teacher in school.teachers %}
+                <li class="px-6 py-4 flex items-center justify-between group hover:bg-white/2 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+                            <i data-lucide="presentation" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-white font-bold">
+                                {{ teacher.firstName }} {{ teacher.lastName }}
+                                <span class="ml-2 px-2 py-0.5 rounded text-[8px] uppercase font-black bg-indigo-500/20 text-indigo-400 tracking-tighter">Enseignant</span>
+                            </div>
+                            <div class="text-[10px] text-slate-500 uppercase tracking-tight">{{ teacher.specialization|default('Éducation') }}</div>
+                        </div>
+                    </div>
+                    <div class="text-xs text-slate-500 italic">{{ teacher.email }}</div>
+                </li>
+            {% endfor %}
+
+            {# 3. Accepted Members (Staff/Students) #}
+            {% for student in school.students %}
+                {% if student.status == 'accepted' %}
+                <li class="px-6 py-4 flex items-center justify-between group hover:bg-white/2 transition-colors">
+                    <div class="flex items-center space-x-4">
+                        {% if student.role == 'admin' %}
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                                <i data-lucide="shield" class="w-5 h-5"></i>
+                            </div>
+                        {% else %}
+                            <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 border border-emerald-500/20">
+                                <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <div class="text-white font-bold flex items-center">
+                                {{ student.fullName }}
+                                {% if student.role == 'admin' %}
+                                    <span class="ml-2 px-2 py-0.5 rounded text-[8px] uppercase font-black bg-primary/20 text-primary tracking-tighter">Administrateur</span>
+                                {% else %}
+                                    <span class="ml-2 px-2 py-0.5 rounded text-[8px] uppercase font-black bg-emerald-500/20 text-emerald-400 tracking-tighter">Élève</span>
+                                {% endif %}
+                            </div>
+                            <div class="text-[10px] text-slate-500 uppercase tracking-tight">ID: {{ student.studentId }}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-xs text-slate-500 hidden sm:block">{{ student.email }}</div>
+                        {% if school.owner == app.user %}
+                            <a href="{{ path('membership_edit_member', {id: student.id}) }}" class="p-2 bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white rounded-lg transition-all" title="Gérer le membre">
+                                <i data-lucide="user-cog" class="w-4 h-4"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        
+        {% if school.teachers|length == 0 and school.students|filter(s => s.status == 'accepted')|length == 0 %}
+            <div class="p-12 text-center text-slate-600">
+                <p>Aucun autre membre n'a été ajouté ou n'a rejoint l'établissement.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

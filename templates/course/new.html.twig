@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Cours - SchoolFlow{% endblock %}
+
+{% block body %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white tracking-tight flex items-center space-x-3">
+            <i data-lucide="plus-circle" class="w-8 h-8 text-primary"></i>
+            <span>Créer un Nouveau Cours</span>
+        </h1>
+        <p class="mt-2 text-slate-400">Ajoutez un nouveau cours académique à votre catalogue.</p>
+    </div>
+
+    <div class="bg-dark-gray border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+        <form method="post" class="p-8 space-y-8">
+            <div class="grid grid-cols-1 gap-8">
+                {# School Selection #}
+                <div class="group">
+                    <label for="school">École *</label>
+                    <select id="school" name="school" required>
+                        <option value="">Sélectionner une école...</option>
+                        {% for school in schools %}
+                            <option value="{{ school.id }}">{{ school.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if schools is empty %}
+                        <p class="mt-2 text-xs text-amber-500 flex items-center">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 mr-1"></i>
+                            Aucune école trouvée. <a href="{{ path('school_new') }}" class="underline ml-1 font-bold">Créez une école</a> d'abord.
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {# Code #}
+                    <div class="group md:col-span-1">
+                        <label for="code">Code du Cours *</label>
+                        <input id="code" name="code" placeholder="Ex. PHYS-101" required type="text"/>
+                    </div>
+
+                    {# Name #}
+                    <div class="group md:col-span-2">
+                        <label for="name">Nom du Cours *</label>
+                        <input id="name" name="name" placeholder="Ex. Physique Quantique" required type="text"/>
+                    </div>
+                </div>
+
+                {# Description #}
+                <div class="group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3" placeholder="Description du contenu du cours..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {# Credits #}
+                    <div class="group">
+                        <label for="credits">Crédits *</label>
+                        <input id="credits" name="credits" required min="1" type="number" placeholder="Nombre de crédits"/>
+                    </div>
+
+                    {# Max Students #}
+                    <div class="group">
+                        <label for="maxStudents">Capacité Max *</label>
+                        <input id="maxStudents" name="maxStudents" required min="1" type="number" placeholder="Nombre max d'étudiants"/>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {# Teacher #}
+                    <div class="group">
+                        <label for="teacher">Enseignant *</label>
+                        <select id="teacher" name="teacher" required>
+                            <option value="">Sélectionner un enseignant...</option>
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}">{{ teacher.fullName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    {# Classroom #}
+                    <div class="group">
+                        <label for="classroom">Salle de Classe</label>
+                        <select id="classroom" name="classroom">
+                            <option value="">Sélectionner une salle...</option>
+                            {% for classroom in classrooms %}
+                                <option value="{{ classroom.id }}">{{ classroom.name }} ({{ classroom.capacity }} places)</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                {# Semester #}
+                <div class="group">
+                    <label for="semester">Semestre *</label>
+                    <input id="semester" name="semester" placeholder="Ex. Automne 2024" required type="text"/>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-white/5 flex items-center justify-between">
+                <a href="{{ path('course_index') }}" class="text-sm font-bold text-slate-500 hover:text-white transition-colors uppercase tracking-widest">
+                    Annuler
+                </a>
+                <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 text-base font-bold text-white shadow-xl hover:brightness-110 active:scale-[0.98] transition-all">
+                    Créer le Cours
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Planning - SchoolFlow{% endblock %}
+
+{% block body %}
+{% set days = ['', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'] %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 pb-8 border-b border-white/5">
+    <div>
+        <h1 class="text-4xl font-bold text-white tracking-tight flex items-center space-x-4">
+            <i data-lucide="calendar-days" class="w-10 h-10 text-primary"></i>
+            <span>Détails du Planning</span>
+        </h1>
+        <p class="mt-2 text-slate-400">Informations détaillées sur ce créneau horaire.</p>
+    </div>
+    <div class="mt-6 flex space-x-3 sm:mt-0">
+        <button type="button" 
+            onclick="showConfirmModal('Supprimer ce créneau ?', () => { 
+                document.getElementById('delete-form-schedule-{{ schedule.id }}').submit(); 
+            })" 
+            class="inline-flex items-center px-4 py-2 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-xl text-sm font-bold transition-all">
+            <i data-lucide="trash-2" class="w-5 h-5 mr-2"></i>
+            Supprimer
+        </button>
+        <form id="delete-form-schedule-{{ schedule.id }}" method="post" action="{{ path('schedule_delete', {id: schedule.id}) }}" class="hidden">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ schedule.id) }}">
+        </form>
+        <a href="{{ path('schedule_index') }}" class="inline-flex items-center px-4 py-2 bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white rounded-xl text-sm font-bold transition-all">
+            <i data-lucide="arrow-left" class="w-5 h-5 mr-2"></i>
+            Retour
+        </a>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto">
+    <div class="bg-dark-gray border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+        <div class="px-8 py-6 border-b border-white/5 bg-white/2 flex items-center justify-between">
+            <h5 class="text-lg font-bold text-white flex items-center">
+                <i data-lucide="book" class="w-5 h-5 text-primary mr-2"></i>
+                {{ schedule.course.code }} - {{ schedule.course.name }}
+            </h5>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/20 uppercase tracking-widest">
+                {{ days[schedule.dayOfWeek] }}
+            </span>
+        </div>
+        <div class="p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Cours</dt>
+                    <dd class="text-white text-lg font-medium">{{ schedule.course.name }} ({{ schedule.course.code }})</dd>
+                </div>
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Enseignant</dt>
+                    <dd class="text-white text-lg font-medium">{{ schedule.course.teacher.fullName }}</dd>
+                </div>
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Salle de Classe</dt>
+                    <dd class="text-white text-lg font-medium">{{ schedule.classroom.name }}</dd>
+                </div>
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Horaires</dt>
+                    <dd class="text-primary text-2xl font-mono font-bold">{{ schedule.startTime|date('H:i') }} — {{ schedule.endTime|date('H:i') }}</dd>
+                </div>
+                
+                <div class="pt-8 border-t border-white/5">
+                    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Valide à partir du</dt>
+                    <dd class="text-slate-300 text-lg">{{ schedule.effectiveFrom|date('d/m/Y') }}</dd>
+                </div>
+                <div class="pt-8 border-t border-white/5">
+                    <dt class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Valide jusqu'au</dt>
+                    <dd class="text-slate-300 text-lg">
+                        {% if schedule.effectiveTo %}
+                            {{ schedule.effectiveTo|date('d/m/Y') }}
+                        {% else %}
+                            <span class="text-green-400 font-bold uppercase tracking-tighter">En cours (Illimité)</span>
+                        {% endif %}
+                    </dd>
+                </div>
+            </div>
+
+            <div class="mt-12 flex items-center justify-center p-4 rounded-xl bg-white/2 border border-white/5">
+                <i data-lucide="info" class="w-4 h-4 text-slate-600 mr-2"></i>
+                <span class="text-xs text-slate-500">Ce créneau a été créé le {{ schedule.createdAt|date('d/m/Y à H:i') }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

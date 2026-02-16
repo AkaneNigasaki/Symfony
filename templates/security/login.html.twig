@@ -1,0 +1,159 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - SchoolFlow{% endblock %}
+
+{% block stylesheets %}
+<style type="text/tailwindcss">
+    /* Extra animations for login */
+    .neon-accent {
+        filter: drop-shadow(0 0 8px rgba(138, 44, 226, 0.8));
+    }
+    .button-glow {
+        box-shadow: 0 0 20px 0px rgba(138, 44, 226, 0.3);
+    }
+    .border-b-focus {
+        transition: border-color 0.3s ease;
+    }
+    .border-b-focus:focus {
+        border-bottom-color: #8a2ce2;
+        outline: none;
+    }
+    .testimonial-track {
+        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    }
+    .bg-desk-overlay {
+        background: linear-gradient(to right, rgba(10, 10, 12, 0.4), rgba(10, 10, 12, 0.1));
+    }
+    /* Hide default layout for full screen */
+    nav {
+        display: none !important;
+    }
+    main {
+        padding: 0 !important;
+    }
+    .mx-auto.max-w-7xl {
+        max-width: none !important;
+        padding: 0 !important;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="flex flex-col md:flex-row min-h-screen bg-dark-gray text-white overflow-hidden" id="login-wrapper">
+    {# Left side - Form #}
+    <div class="w-full md:w-1/2 flex items-center justify-center p-8 md:p-24 z-10 transition-all duration-1000 ease-out -translate-x-full opacity-0" id="login-form-side">
+        <div class="w-full max-w-md">
+            <h2 class="text-4xl font-semibold mb-3">Connexion</h2>
+            <p class="text-gray-400 mb-10 font-light">Accédez à votre tableau de bord AKANE.</p>
+
+            {% if error %}
+                <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <form method="post" action="{{ path('app_login') }}" class="space-y-8">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                
+                <div class="input-group">
+                    <label class="block text-[10px] tracking-widest uppercase text-gray-500 mb-1 font-semibold">
+                        Adresse email
+                    </label>
+                    <input id="username" name="_username" value="{{ last_username }}" placeholder="akanenigasaki@gmail.com" required autofocus type="email" class="input-underline"/>
+                    <span class="input-focus-line"></span>
+                </div>
+
+                <div class="input-group">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-[10px] tracking-widest uppercase text-gray-500 font-semibold">
+                            Mot de passe
+                        </label>
+                        <a href="#" class="text-[10px] tracking-wider text-primary hover:text-white transition-colors">
+                            Mot de passe oublié?
+                        </a>
+                    </div>
+                    <div class="relative">
+                        <input id="password" name="_password" placeholder="••••••••••••" required type="password" class="input-underline pr-12"/>
+                        <button type="button" 
+                                onclick="togglePasswordVisibility('password', 'password-icon')"
+                                class="absolute top-4 right-2 text-gray-500 hover:text-white transition-colors focus:outline-none">
+                            <i id="password-icon" data-lucide="eye-off" class="w-[18px] h-[18px]"></i>
+                        </button>
+                    </div>
+                    <span class="input-focus-line"></span>
+                </div>
+                
+                <div class="flex items-center">
+                    <input type="checkbox" id="remember_me" name="_remember_me" class="w-4 h-4 rounded border-gray-800 bg-transparent text-primary focus:ring-primary transition-all">
+                    <label for="remember_me" class="ml-2 mt-0.5 cursor-pointer text-sm capitalize text-slate-400">Se souvenir de moi</label>
+                </div>
+
+                <button class="w-full btn-primary uppercase tracking-widest text-sm bg-[#7C3AED] py-3 rounded-full" type="submit">
+                    Se connecter
+                </button>
+            </form>
+
+
+            <div class="mt-12 text-center">
+                <p class="text-sm text-gray-500">
+                    Pas encore de compte ? 
+                    <a class="font-bold text-white hover:text-primary ml-2 underline decoration-gray-800 underline-offset-4" href="{{ path('app_register') }}">Inscrivez-vous</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {# Right side - Image #}
+    <div class="relative hidden md:flex w-1/2 flex-col justify-between p-8 md:p-16 overflow-hidden transition-all duration-1000 ease-out translate-x-full opacity-0" id="login-image-side">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=2070" 
+                 alt="Campus" class="w-full h-full object-cover brightness-50"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-dark-gray via-transparent to-transparent opacity-90"></div>
+        </div>
+        <div class="relative z-10 flex items-center space-x-3">
+            <div class="w-10 h-10 bg-primary rounded flex items-center justify-center shadow-lg">
+                <i data-lucide="graduation-cap" class="text-white w-6 h-6"></i>
+            </div>
+            <span class="text-xl font-bold tracking-widest uppercase">Akane</span>
+        </div>
+        <div class="relative z-10 mt-auto">
+            <h1 class="text-5xl md:text-7xl font-light leading-tight mb-8">
+                Façonner le <br />
+                <span class="font-semibold text-primary">futur.</span>
+            </h1>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.setAttribute('data-lucide', 'eye');
+        } else {
+            input.type = 'password';
+            icon.setAttribute('data-lucide', 'eye-off');
+        }
+        
+        // Refresh lucide icons
+        lucide.createIcons();
+    }
+
+    // Entrance animation
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            document.getElementById('login-form-side').classList.remove('-translate-x-full', 'opacity-0');
+            document.getElementById('login-form-side').classList.add('translate-x-0', 'opacity-100');
+            
+            const imageSide = document.getElementById('login-image-side');
+            if (imageSide) {
+                imageSide.classList.remove('translate-x-full', 'opacity-0');
+                imageSide.classList.add('translate-x-0', 'opacity-100');
+            }
+        }, 100);
+    });
+</script>
+{% endblock %}

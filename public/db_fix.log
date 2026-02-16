@@ -1,0 +1,10 @@
+Starting DB Fix...
+Database URL found: mysql://root:@127.0.0.1:3306/school_management?serverVersion=8.0.32&charset=utf8mb4
+Connecting to host: 127.0.0.1, port: 3306, db: school_management, user: root
+Connected successfully.
+Table users created (or already exists).
+Column owner_id added to schools.
+FK added.
+Index added.
+Migration marked as executed.
+DONE.

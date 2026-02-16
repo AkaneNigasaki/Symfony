@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Classe - SchoolFlow{% endblock %}
+
+{% block body %}
+<div class="max-w-3xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-white tracking-tight flex items-center space-x-3">
+            <i data-lucide="plus-circle" class="w-8 h-8 text-primary"></i>
+            <span>Créer une Nouvelle Classe</span>
+        </h1>
+        <p class="mt-2 text-slate-400">Ajoutez un nouvel espace d'apprentissage à votre établissement.</p>
+    </div>
+
+    <div class="bg-dark-gray border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
+        <form method="post" class="p-8 space-y-8">
+            <div class="grid grid-cols-1 gap-8">
+                {# School #}
+                <div class="group">
+                    <label for="school">École *</label>
+                    <select id="school" name="school" required>
+                        <option value="">Sélectionner une école...</option>
+                        {% for school in schools %}
+                            <option value="{{ school.id }}">{{ school.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% if schools is empty %}
+                        <div class="mt-2 text-xs text-amber-500 flex items-center">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 mr-1"></i>
+                            Aucune école trouvée. <a href="{{ path('school_new') }}" class="underline ml-1">Créez une école</a> d'abord.
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Name #}
+                <div class="group">
+                    <label for="name">Nom de la Classe *</label>
+                    <input id="name" name="name" placeholder="Ex. Salle 101, Labo de Chimie" required type="text"/>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {# Type #}
+                    <div class="group">
+                        <label for="type">Type *</label>
+                        <select id="type" name="type" required>
+                            <option value="">Sélectionner un type...</option>
+                            <option value="classroom">Classe</option>
+                            <option value="lab">Laboratoire</option>
+                            <option value="auditorium">Amphithéâtre</option>
+                        </select>
+                    </div>
+
+                    {# Capacity #}
+                    <div class="group">
+                        <label for="capacity">Capacité *</label>
+                        <input id="capacity" name="capacity" required min="1" type="number" placeholder="Nombre de places"/>
+                    </div>
+                </div>
+
+                {# Location #}
+                <div class="group">
+                    <label for="location">Emplacement</label>
+                    <input id="location" name="location" placeholder="Ex. Bâtiment A, 2ème étage" type="text"/>
+                </div>
+
+                {# Facilities #}
+                <div class="group">
+                    <label for="facilities">Équipements</label>
+                    <input id="facilities" name="facilities" placeholder="Ex. Projecteur, Tableau Blanc, Ordinateurs" type="text"/>
+                    <p class="mt-2 text-[10px] text-slate-500 uppercase tracking-wider font-bold">Séparez les équipements par des virgules</p>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-white/5 flex items-center justify-between">
+                <a href="{{ path('classroom_index') }}" class="text-sm font-bold text-slate-500 hover:text-white transition-colors uppercase tracking-widest">
+                    Annuler
+                </a>
+                <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 text-base font-bold text-white shadow-xl hover:brightness-110 active:scale-[0.98] transition-all">
+                    Créer la Classe
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

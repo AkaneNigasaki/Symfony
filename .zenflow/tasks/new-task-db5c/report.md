@@ -1,156 +1,83 @@
-# Rapport de Transformation - Projet EduManage
+# Rapport de Modification - Transformation en EduManage
 
 ## Résumé
+Mise à jour complète de tous les fichiers Twig pour transformer le système de gestion scolaire en **EduManage**, un système de gestion des enseignants et matières.
 
-Le projet a été transformé avec succès d'un système de gestion scolaire complexe vers un système simple de **Gestion des Enseignants et Matières** (EduManage).
+## Modifications effectuées
 
-## Modifications Apportées
+### 1. Templates Teachers
+- **`teacher/edit.html.twig`**
+  - Suppression des références à `school` et `schools` (ancien système)
+  - Mise à jour du titre de "SchoolFlow" vers "EduManage"
+  - Simplification du formulaire pour ne garder que les champs essentiels
 
-### 1. Base de Données
+- **`teacher/show.html.twig`**
+  - Remplacement de `courses` par `subjects` (matières)
+  - Mise à jour des icônes et labels pour refléter les matières au lieu des cours
+  - Correction de la route `course_new` vers `subject_new`
+  - Affichage du coefficient et des heures par semaine pour chaque matière
+  - Mise à jour du compteur de "Classes" vers "Matières"
 
-**Migration créée:** `Version20260217000001.php`
+- **`teacher/index.html.twig`**
+  - Mise à jour du titre "SchoolFlow" → "EduManage"
 
-**Tables créées:**
-- `users` - Utilisateurs du système
-- `teachers` - Enseignants
-- `subjects` - Matières (avec relation vers teachers)
+- **`teacher/new.html.twig`**
+  - Mise à jour du titre "SchoolFlow" → "EduManage"
 
-**Tables supprimées:**
-- schools, classrooms, courses, students, enrollments, grades, assignments, schedules, user_activities
+### 2. Templates Subjects
+- **`subject/index.html.twig`**
+  - Mise à jour du titre "Gestion Éducative" → "EduManage"
 
-### 2. Entités Doctrine
+- **`subject/new.html.twig`**
+  - Mise à jour du titre "Gestion Éducative" → "EduManage"
 
-**Nouvelles entités:**
-- [`Subject`](./src/Entity/Subject.php) - Matière avec code, nom, coefficient, heures/semaine
-- [`Teacher`](./src/Entity/Teacher.php) (simplifié) - Enseignant sans dépendance école
-- [`User`](./src/Entity/User.php) (simplifié) - Utilisateur basique pour l'authentification
+- **`subject/edit.html.twig`**
+  - Mise à jour du titre "Gestion Éducative" → "EduManage"
 
-**Entités supprimées:**
-- Assignment, Classroom, Course, Enrollment, Grade, Schedule, School, Student, UserActivity
+- **`subject/show.html.twig`**
+  - Mise à jour du titre "Gestion Éducative" → "EduManage"
 
-### 3. Contrôleurs
+### 3. Template Base
+- **`base.html.twig`**
+  - Correction du footer : "SchoolFlow" → "EduManage"
 
-**Créés:**
-- [`SubjectController`](./src/Controller/SubjectController.php) - CRUD complet pour les matières
-- [`TeacherController`](./src/Controller/TeacherController.php) (simplifié) - CRUD pour enseignants
-- [`HomeController`](./src/Controller/HomeController.php) (simplifié) - Tableau de bord avec statistiques
+### 4. Templates Sécurité
+- **`security/login.html.twig`**
+  - Mise à jour du titre "SchoolFlow" → "EduManage"
+  - Correction du texte d'accueil : "AKANE" → "EduManage"
+  - Mise à jour du logo et branding
 
-**Supprimés:**
-- ActivityController, ClassroomController, CourseController, MembershipController, ScheduleController, SchoolController, StudentController
+- **`security/register.html.twig`**
+  - Mise à jour du titre "SchoolFlow" → "EduManage"
+  - Correction du logo : "Akane" → "EduManage"
 
-### 4. Repositories
+## Vérifications effectuées
 
-**Créés:**
-- [`SubjectRepository`](./src/Repository/SubjectRepository.php) - Requêtes pour matières
-- [`TeacherRepository`](./src/Repository/TeacherRepository.php) (simplifié)
+1. ✅ Cache Symfony vidé avec succès
+2. ✅ Schéma de base de données validé et synchronisé
+3. ✅ Migrations déjà appliquées (Version20260217000001)
+4. ✅ Toutes les références à l'ancien système supprimées
 
-**Supprimés:**
-- Tous les repositories des anciennes entités
+## État final
 
-### 5. Templates (Vues)
+L'application **EduManage** est maintenant complètement configurée avec :
+- Interface cohérente avec le nouveau branding
+- Templates mis à jour pour refléter le système de gestion des enseignants et matières
+- Base de données synchronisée avec les entités `Teacher`, `Subject` et `User`
+- Toutes les vues fonctionnelles (index, show, new, edit) pour les enseignants et matières
 
-**Templates créés:**
+## Structure des entités
 
-**Enseignants:**
-- [`teacher/index.html.twig`](./templates/teacher/index.html.twig) - Liste des enseignants
-- [`teacher/new.html.twig`](./templates/teacher/new.html.twig) - Formulaire ajout
-- [`teacher/edit.html.twig`](./templates/teacher/edit.html.twig) - Formulaire édition
-- [`teacher/show.html.twig`](./templates/teacher/show.html.twig) - Détails enseignant
+### Teacher
+- firstName, lastName, email, phoneNumber
+- specialization, hireDate
+- Relation OneToMany avec Subject
 
-**Matières:**
-- [`subject/index.html.twig`](./templates/subject/index.html.twig) - Liste des matières
-- [`subject/new.html.twig`](./templates/subject/new.html.twig) - Formulaire ajout
-- [`subject/edit.html.twig`](./templates/subject/edit.html.twig) - Formulaire édition
-- [`subject/show.html.twig`](./templates/subject/show.html.twig) - Détails matière
+### Subject
+- code, name, description
+- coefficient, hoursPerWeek
+- Relation ManyToOne avec Teacher (optionnel)
 
-**Page d'accueil:**
-- [`home/index.html.twig`](./templates/home/index.html.twig) - Tableau de bord simplifié
-
-**Navigation:**
-- [`base.html.twig`](./templates/base.html.twig) - Layout principal (nom: EduManage, menu: Enseignants, Matières)
-
-### 6. Fonctionnalités
-
-**Système actuel permet:**
-- ✅ Gestion complète des enseignants (CRUD)
-- ✅ Gestion complète des matières (CRUD)
-- ✅ Attribution d'enseignants aux matières
-- ✅ Affichage des statistiques (nombre d'enseignants, matières, assignations)
-- ✅ Interface moderne avec Tailwind CSS
-- ✅ Authentification utilisateur
-
-### 7. Données de Test
-
-**Commande créée:** `php bin/console app:create-test-data`
-
-**Données générées:**
-- 1 utilisateur admin (admin@edumanage.fr / admin123)
-- 5 enseignants avec spécialisations
-- 8 matières assignées aux enseignants
-
-### 8. État du Schéma
-
-```bash
-✅ Mapping validé
-✅ Schéma synchronisé
-✅ Données de test créées
-```
-
-## Instructions de Démarrage
-
-1. **Lancer le serveur:**
-   ```bash
-   symfony server:start
-   # ou
-   php -S localhost:8000 -t public
-   ```
-
-2. **Se connecter:**
-   - URL: http://localhost:8000
-   - Email: admin@edumanage.fr
-   - Password: admin123
-
-3. **Naviguer:**
-   - Tableau de bord: Voir les statistiques
-   - Enseignants: Gérer les enseignants
-   - Matières: Gérer les matières et leurs assignations
-
-## Architecture Technique
-
-**Stack:**
-- Symfony 7.4+
-- Doctrine ORM
-- Twig
-- Tailwind CSS
-- MySQL/MariaDB
-
-**Structure:**
-```
-src/
-├── Command/CreateTestDataCommand.php
-├── Controller/
-│   ├── HomeController.php
-│   ├── TeacherController.php
-│   ├── SubjectController.php
-│   ├── SecurityController.php
-│   └── RegistrationController.php
-├── Entity/
-│   ├── User.php
-│   ├── Teacher.php
-│   └── Subject.php
-└── Repository/
-    ├── UserRepository.php
-    ├── TeacherRepository.php
-    └── SubjectRepository.php
-
-templates/
-├── base.html.twig
-├── home/index.html.twig
-├── teacher/...
-├── subject/...
-└── security/...
-```
-
-## Conclusion
-
-Le projet a été complètement transformé en un système simple et efficace de gestion des enseignants et matières. Toutes les dépendances complexes ont été supprimées, l'interface a été modernisée, et le système est prêt à l'utilisation.
+### User
+- firstName, lastName, email, password
+- Rôles pour l'authentification

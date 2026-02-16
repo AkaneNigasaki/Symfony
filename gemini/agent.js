@@ -10,7 +10,7 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 
 const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
 });
 
 async function runAgent() {
@@ -24,12 +24,17 @@ async function runAgent() {
         3. Pour lire un fichier, demande à l'utilisateur ou propose une commande cat/type.
         4. Pour créer ou remplacer un fichier, utilise cette syntaxe sur une seule ligne :
            ECRIRE: chemin/du/fichier | CONTENU: le code ici
-        5. Sois précis sur les namespaces Symfony.`
+        5. Sois précis sur les namespaces Symfony.
+        6. Le repertoire du projet se trouve dans D:/Sahaza
+        `,
     });
 
-    const askQuestion = (query) => new Promise((resolve) => rl.question(query, resolve));
+    const askQuestion = (query) =>
+        new Promise((resolve) => rl.question(query, resolve));
 
-    console.log("Agent Symfony prêt. Posez votre question ou demandez une modification.");
+    console.log(
+        "Agent Symfony prêt. Posez votre question ou demandez une modification.",
+    );
 
     while (true) {
         const userPrompt = await askQuestion("\nVous : ");
@@ -38,28 +43,29 @@ async function runAgent() {
 
         try {
             const result = await model.generateContent(userPrompt);
-            let response = result.response.text().replace(/\*/g, ''); 
-            
-            const lines = response.split('\n');
-            
+            let response = result.response.text().replace(/\*/g, "");
+
+            const lines = response.split("\n");
+
             for (let line of lines) {
                 // Gestion des commandes classiques
                 if (line.startsWith("COMMANDE:")) {
                     const cmd = line.replace("COMMANDE:", "").trim();
                     console.log("Exécution de : " + cmd);
-                    const { stdout } = await execPromise(cmd, { shell: "powershell.exe" });
+                    const { stdout } = await execPromise(cmd, {
+                        shell: "powershell.exe",
+                    });
                     console.log("Résultat :\n" + stdout);
-                } 
+                }
                 // Gestion de la création/modification de fichiers
                 else if (line.startsWith("ECRIRE:")) {
                     const parts = line.split("| CONTENU:");
                     const filePath = parts[0].replace("ECRIRE:", "").trim();
                     const content = parts[1].trim();
-                    
-                    fs.writeFileSync(filePath, content, 'utf8');
+
+                    fs.writeFileSync(filePath, content, "utf8");
                     console.log("Fichier modifié ou créé : " + filePath);
-                }
-                else {
+                } else {
                     if (line.trim() !== "") console.log("Gemini : " + line);
                 }
             }

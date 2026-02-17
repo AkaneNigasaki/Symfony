@@ -35,3 +35,4 @@ Le fichier `.env` contient les variables d'environnement de votre application, a
 ```bash
 # Générer une migration à partir des changements des entités
 php bin/console make:migration
+```

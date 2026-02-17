@@ -20,7 +20,7 @@ Assurez-vous d’avoir installé les outils suivants :
 
 ```bash
 git clone https://github.com/AkaneNigasaki/Symfony/
-cd symfony
+cd Symfony
 ```
 
 ## Installer les dépendence

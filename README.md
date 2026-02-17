@@ -26,7 +26,7 @@ npm install
 
 ### Assurez-vous de modifier le fichier .env pour la gestion de la base de données
 
-Le fichier `.env` contient les variables d'environnement de votre application, assurer vous de le modifier pour quelle type de base de données utilisé
+Le fichier `.env` contient les variables d'environnement de l'application, assurer vous de le modifier pour quelle type de base de données utilisé
 
 ## Gestion des migrations de base de données
 

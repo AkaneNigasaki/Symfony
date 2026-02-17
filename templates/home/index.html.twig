@@ -5,7 +5,7 @@
 {% block body %}
 <div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
-    {# Hero Banner Section #}
+
     <section class="relative h-72 rounded-2xl overflow-hidden border border-primary/10 group shadow-2xl">
             <img
                 class="w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000"
@@ -22,9 +22,9 @@
             </div>
         </section>
 
-        {# Metrics Grid #}
+
         <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {# Teachers #}
+
             <div class="bg-surface-dark/60 border border-primary/10 p-6 rounded-xl shadow-lg hover:border-primary/30 transition-colors group">
                 <div class="flex justify-between items-start mb-4">
                     <div class="p-3 bg-primary/10 rounded-lg text-primary group-hover:bg-primary/20 transition-colors">
@@ -38,7 +38,7 @@
                 <p class="text-3xl font-bold text-white mt-1">{{ stats.teachers|default(0) }}</p>
             </div>
 
-            {# Subjects #}
+
             <div class="bg-surface-dark/60 border border-primary/10 p-6 rounded-xl shadow-lg hover:border-primary/30 transition-colors group">
                 <div class="flex justify-between items-start mb-4">
                     <div class="p-3 bg-primary/10 rounded-lg text-primary group-hover:bg-primary/20 transition-colors">
@@ -52,7 +52,7 @@
                 <p class="text-3xl font-bold text-white mt-1">{{ stats.subjects|default(0) }}</p>
             </div>
 
-            {# Assigned Subjects #}
+
             <div class="bg-surface-dark/60 border border-primary/10 p-6 rounded-xl shadow-lg hover:border-primary/30 transition-colors group">
                 <div class="flex justify-between items-start mb-4">
                     <div class="p-3 bg-primary/10 rounded-lg text-primary group-hover:bg-primary/20 transition-colors">
@@ -66,7 +66,7 @@
                 <p class="text-3xl font-bold text-white mt-1">{{ stats.assigned_subjects|default(0) }}</p>
             </div>
 
-            {# Unassigned Subjects #}
+
             <div class="bg-surface-dark/60 border border-primary/10 p-6 rounded-xl shadow-lg hover:border-primary/30 transition-colors group">
                 <div class="flex justify-between items-start mb-4">
                     <div class="p-3 bg-primary/10 rounded-lg text-primary group-hover:bg-primary/20 transition-colors">
@@ -81,7 +81,7 @@
             </div>
         </section>
 
-        {# Quick Actions #}
+
         <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <a href="{{ path('teacher_new') }}" class="bg-surface-dark/40 border border-primary/10 p-6 rounded-2xl hover:border-primary/30 transition-all group">
                 <div class="flex items-center gap-4">

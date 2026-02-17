@@ -21,8 +21,8 @@
 <body class="h-full bg-white dark:bg-background-dark text-gray-900 dark:text-slate-200 antialiased font-sans overflow-hidden">
     <div class="flex h-screen overflow-hidden">
         {% if app.user %}
-        {# Sidebar #}
-        <aside id="sidebar" class="w-64 bg-gray-50 dark:bg-sidebar-bg flex flex-col border-r border-gray-200 dark:border-white/5 transition-all duration-300 ease-in-out relative z-50">
+
+        <aside id="sidebar" class="w-64 bg-gray-50 dark:bg-sidebar-bg flex flex-col transition-all duration-300 ease-in-out relative z-50">
             <div class="p-8 flex items-center justify-between relative whitespace-nowrap">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
@@ -38,27 +38,25 @@
             <nav class="flex-1 px-4 space-y-2 mt-4 overflow-y-auto custom-scrollbar">
                 {% set current_route = app.request.attributes.get('_route') %}
 
-                <a href="{{ path('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route == 'home' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-slate-200' }}">
+                <a href="{{ path('home') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route == 'home' ? 'bg-primary/15 text-primary' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-slate-200' }}">
                     <i data-lucide="layout-dashboard" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="sidebar-text font-medium text-sm">Tableau de bord</span>
                 </a>
 
-                <a href="{{ path('teacher_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'teacher' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-slate-200' }}">
+                <a href="{{ path('teacher_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'teacher' ? 'bg-primary/15 text-primary' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-slate-200' }}">
                     <i data-lucide="contact" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="sidebar-text font-medium text-sm">Enseignants</span>
                 </a>
 
-                <a href="{{ path('subject_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'subject' ? 'bg-primary/15 text-primary border border-primary/20' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-slate-200' }}">
+                <a href="{{ path('subject_index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ current_route starts with 'subject' ? 'bg-primary/15 text-primary' : 'text-gray-600 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-slate-200' }}">
                     <i data-lucide="book" class="w-5 h-5 flex-shrink-0"></i>
                     <span class="sidebar-text font-medium text-sm">Matières</span>
                 </a>
             </nav>
 
             <div class="p-4 mt-auto">
-                {# Profile Section with Flyout #}
                 <div class="group/profile relative">
-                    {# Trigger Button #}
-                    <button class="flex w-full items-center gap-3 rounded-2xl border border-gray-200 dark:border-white/5 bg-white dark:bg-surface-dark p-3 text-left transition-all hover:bg-gray-100 dark:hover:bg-white/5 hover:border-gray-300 dark:hover:border-white/10 group">
+                    <button class="flex w-full items-center gap-3 rounded-2xl bg-white dark:bg-surface-dark p-3 text-left transition-all hover:bg-gray-100 dark:hover:bg-white/5 group">
                         <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary ring-2 ring-gray-200 dark:ring-white/10 font-bold text-sm">
                             {{ (app.user.firstName ?? 'U')|first|upper }}
                         </div>
@@ -69,11 +67,11 @@
                         <i data-lucide="chevron-right" class="text-gray-400 dark:text-white/40 transition-all group-hover:translate-x-1 group-hover:text-gray-600 dark:group-hover:text-white w-4 h-4"></i>
                     </button>
 
-                    <div class="flyout-menu absolute left-full bottom-0 z-50 w-[320px] origin-bottom-left ml-2 hidden group-hover/profile:block">
+                    <div class="flyout-menu absolute left-full bottom-0 z-[10002] w-[320px] origin-bottom-left ml-2 hidden group-hover/profile:block">
                         <div class="absolute -left-6 top-0 bottom-0 w-6"></div>
-                        
-                        <div class="flex flex-col overflow-hidden rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#251b2e] shadow-2xl shadow-black/80 ring-1 ring-gray-300 dark:ring-white/5">
-                            {# Cover Header #}
+
+                        <div class="flex flex-col overflow-hidden rounded-2xl shadow-2xl shadow-black/80 ring-1 ring-gray-300 dark:ring-white/5 bg-white dark:bg-[#251b2e]">
+
                             <div class="relative h-28 w-full bg-gradient-to-r from-primary via-purple-900 to-indigo-900 overflow-hidden">
                                 <div class="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/10 blur-xl"></div>
                                 <div class="absolute bottom-0 left-0 h-full w-full flex items-end justify-center px-6 translate-y-1/2">
@@ -94,7 +92,7 @@
                                 </span>
                             </div>
 
-                            <div class="flex flex-col border-t border-gray-200 dark:border-white/5 p-2">
+                            <div class="flex flex-col p-2">
                                 <a href="#" class="group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-all hover:bg-gray-100 dark:hover:bg-surface-hover">
                                     <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-surface-dark text-gray-600 dark:text-white/50 group-hover:bg-primary group-hover:text-white transition-colors">
                                         <i data-lucide="settings" class="w-5 h-5"></i>
@@ -136,7 +134,7 @@
                                 </a>
                             </div>
 
-                            <div class="mt-1 border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-black/20 p-4">
+                            <div class="mt-1 bg-gray-50 dark:bg-black/20 p-4">
                                 <div class="flex justify-between px-1 text-[10px] text-gray-400 dark:text-white/20">
                                     <span>v1.0.0</span>
                                     <span>EduManage</span>
@@ -149,27 +147,27 @@
         </aside>
         {% endif %}
 
-        {# Main Container #}
+
         <div class="flex-1 flex flex-col min-w-0 bg-gray-100 dark:bg-dashboard-bg relative overflow-hidden">
             {% if app.user %}
-            {# Top Header #}
-            <header class="h-20 flex items-center justify-between px-8 gap-6 border-b border-gray-200 dark:border-white/5 bg-white/80 dark:bg-background-dark/50 backdrop-blur-xl">
+
+            <header class="h-20 flex items-center justify-between px-8 gap-6 bg-white/80 dark:bg-background-dark/50 backdrop-blur-xl">
                 <div class="flex-1 max-w-2xl relative group">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-slate-500 group-focus-within:text-primary transition-colors"></i>
                     <input
                         type="text"
                         placeholder="Rechercher des enseignants, matières..."
-                        class="w-full bg-gray-100 dark:bg-white/5 border border-gray-300 dark:border-white/5 rounded-2xl pl-12 pr-4 py-3 text-sm text-gray-900 dark:text-slate-200 placeholder:text-gray-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:bg-gray-200 dark:focus:bg-white/[0.07] transition-all"
+                        class="w-full bg-gray-100 dark:bg-white/5 rounded-2xl pl-12 pr-4 py-3 text-sm text-gray-900 dark:text-slate-200 placeholder:text-gray-400 dark:placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-primary/50 focus:bg-gray-200 dark:focus:bg-white/[0.07] transition-all"
                     />
                 </div>
 
                 <div class="flex items-center gap-4">
-                    {# Dark Mode Toggle #}
-                    <button id="theme-toggle" class="w-10 h-10 rounded-xl border border-gray-300 dark:border-white/10 flex items-center justify-center text-gray-600 dark:text-slate-500 hover:text-gray-900 dark:hover:text-slate-200 hover:bg-gray-200 dark:hover:bg-white/5 transition-all relative" title="Basculer le thème">
+
+                    <button id="theme-toggle" class="w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 dark:text-slate-500 hover:text-gray-900 dark:hover:text-slate-200 hover:bg-gray-200 dark:hover:bg-white/5 transition-all relative" title="Basculer le thème">
                         <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
                         <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
                     </button>
-                    <button class="w-10 h-10 rounded-xl border border-gray-300 dark:border-white/10 flex items-center justify-center text-gray-600 dark:text-slate-500 hover:text-gray-900 dark:hover:text-slate-200 hover:bg-gray-200 dark:hover:bg-white/5 transition-all relative">
+                    <button class="w-10 h-10 rounded-xl flex items-center justify-center text-gray-600 dark:text-slate-500 hover:text-gray-900 dark:hover:text-slate-200 hover:bg-gray-200 dark:hover:bg-white/5 transition-all relative">
                         <i data-lucide="bell" class="w-5 h-5"></i>
                         <div class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 border-2 border-white dark:border-dashboard-bg rounded-full"></div>
                     </button>
@@ -199,33 +197,33 @@
 
     {% block javascripts %}{% endblock %}
     
-    {# Modal Component #}
-    <div id="confirm-modal" class="fixed inset-0 z-[100] hidden">
-        {# Backdrop #}
+
+    <div id="confirm-modal" class="fixed inset-0 z-[9999] hidden">
+
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm modal-backdrop"></div>
-        
-        {# Modal Content #}
-        <div class="absolute inset-0 flex items-center justify-center p-4">
+
+
+        <div class="absolute inset-0 flex items-center justify-center p-4 z-[10001]">
             <div class="relative w-full max-w-md transform transition-all modal-content">
-                <div class="overflow-hidden rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#251b2e] shadow-2xl">
-                    {# Header #}
-                    <div class="flex items-center gap-4 border-b border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-white/2 px-6 py-4">
+                <div class="overflow-hidden rounded-2xl bg-white dark:bg-[#251b2e] shadow-2xl">
+
+                    <div class="flex items-center gap-4 bg-gray-50 dark:bg-white/2 px-6 py-4">
                         <div class="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10 text-amber-500">
                             <i data-lucide="alert-triangle" class="w-6 h-6"></i>
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">Confirmation requise</h3>
                     </div>
-                    
-                    {# Body #}
+
+
                     <div class="px-6 py-5">
                         <p id="modal-message" class="text-sm text-gray-700 dark:text-slate-300 leading-relaxed">
                             Êtes-vous sûr de vouloir continuer ?
                         </p>
                     </div>
-                    
-                    {# Footer #}
-                    <div class="flex items-center justify-end gap-3 border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-black/20 px-6 py-4">
-                        <button type="button" class="modal-cancel rounded-xl border border-gray-300 dark:border-white/10 bg-white dark:bg-white/5 px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-white transition-all hover:bg-gray-100 dark:hover:bg-white/10">
+
+
+                    <div class="flex items-center justify-end gap-3 bg-gray-50 dark:bg-black/20 px-6 py-4">
+                        <button type="button" class="modal-cancel rounded-xl bg-white dark:bg-white/5 px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-white transition-all hover:bg-gray-100 dark:hover:bg-white/10">
                             Annuler
                         </button>
                         <button type="button" id="modal-confirm" class="modal-confirm rounded-xl bg-red-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/30">

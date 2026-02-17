@@ -22,7 +22,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 space-y-8">
-            <div class="bg-dark-gray border border-white/5 rounded-2xl p-8">
+            <div class="bg-dark-gray rounded-2xl p-8">
                 <h2 class="text-xl font-bold text-white mb-6 flex items-center">
                     <i data-lucide="info" class="w-5 h-5 mr-2 text-primary"></i>
                     Informations Générales
@@ -47,7 +47,7 @@
         </div>
 
         <div class="space-y-8">
-            <div class="bg-dark-gray border border-white/5 rounded-2xl p-8">
+            <div class="bg-dark-gray rounded-2xl p-8">
                 <h2 class="text-xl font-bold text-white mb-6 flex items-center">
                     <i data-lucide="user" class="w-5 h-5 mr-2 text-primary"></i>
                     Enseignant
@@ -76,15 +76,15 @@
                 {% endif %}
             </div>
 
-            <div class="bg-dark-gray border border-white/5 rounded-2xl p-8">
+            <div class="bg-dark-gray rounded-2xl p-8">
                 <h2 class="text-xl font-bold text-white mb-4 flex items-center">
                     <i data-lucide="trash-2" class="w-5 h-5 mr-2 text-red-500"></i>
                     Zone Dangereuse
                 </h2>
-                <button type="button" 
-                    onclick="showConfirmModal('Êtes-vous sûr de vouloir supprimer cette matière ? Cette action est irréversible.', () => { 
-                        document.getElementById('delete-form').submit(); 
-                    })" 
+                <button type="button"
+                    onclick="showConfirmModal('Êtes-vous sûr de vouloir supprimer {{ subject.name }} ? Cette action est irréversible.', () => {
+                        document.getElementById('delete-form').submit();
+                    })"
                     class="w-full inline-flex items-center justify-center rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-4 py-3 text-sm font-bold transition-all">
                     <i data-lucide="trash-2" class="w-5 h-5 mr-2"></i>
                     Supprimer la Matière

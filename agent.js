@@ -15,7 +15,7 @@ const rl = readline.createInterface({
 
 async function runAgent() {
     const model = genAI.getGenerativeModel({
-        model: "gemini-3-flash-preview",
+        model: "gemini-2.5-flash",
         systemInstruction: `Tu es un expert Symfony et DevOps. Ton but est d'aider à créer ou modifier des projets Symfony.
         
         Règles strictes :

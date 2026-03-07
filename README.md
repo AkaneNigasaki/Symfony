@@ -4,6 +4,11 @@ Ce projet est construit avec **Symfony** pour un gestion d'école et matère, ut
 
 ---
 
+Clonner le projet
+```bash
+git clone https://github.com/AkaneNigasaki/Symfony/
+```
+
 ## Prérequis
 
 Assurez-vous d’avoir installé les outils suivants :
